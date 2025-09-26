@@ -15,6 +15,9 @@ let users = [];
 app.post('/users', (req, res) => {
     const {name, email} = req.body;
 
+    if(!name || !email)
+        return res.status(400).json({error: 'Both name and email are required'});
+    
     const newUser = {
         id: uuidv4().split('-')[0], 
         name, 
@@ -29,7 +32,40 @@ app.get('/users/:id', (req, res) => {
     const {id} = req.params
     const user = users.find(u => u.id == id);
 
+    if(!user)
+        return res.status(404).json({error: 'User not found'});
+
     res.status(200).json(user);
+});
+
+app.put('/users/:id', (req, res) => {
+    const {id} = req.params
+    const user = users.find(u => u.id == id);
+
+    if(!user)
+        return res.status(404).json({error: 'User not found'});
+
+    const {name, email} = req.body;
+
+    if(!name || !email)
+        return res.status(400).json({error: 'Both name and email are required'});
+
+    user.name = name;
+    user.email = email;
+
+    res.status(200).json(user);
+});
+
+app.delete('/users/:id', (req, res) => {
+    const {id} = req.params
+    const user = users.find(u => u.id == id);
+
+    if(!user)
+        return res.status(404).json({error: 'User not found'});
+
+    users.splice(user, 1);
+
+    res.status(204).send();
 });
 
 app.get('/', (req, res) => {
