@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { v4: uuidv4 } = require('uuid'); 
+const { randomUUID } = require('crypto'); 
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -19,7 +19,7 @@ app.post('/users', (req, res) => {
         return res.status(400).json({error: 'Both name and email are required'});
     
     const newUser = {
-        id: uuidv4().split('-')[0], 
+        id: randomUUID().split('-')[0], 
         name, 
         email};
 
